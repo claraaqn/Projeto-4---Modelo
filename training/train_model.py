@@ -8,8 +8,8 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# virifica se o treinamento tá usando a GPU
 def verify_gpu():
-    """Verifica se o TensorFlow está usando GPU."""
     gpus = tf.config.list_physical_devices('GPU')
     if gpus:
         logger.info(f"GPUs disponíveis: {gpus}")
@@ -18,8 +18,8 @@ def verify_gpu():
     else:
         logger.warning("Nenhuma GPU encontrada. O treinamento será mais lento.")
 
+# cria o modelo
 def create_model():
-    """Cria o modelo de classificação."""
     base_model = tf.keras.applications.MobileNetV2(
         input_shape=(224, 224, 3),
         include_top=False,
@@ -43,13 +43,9 @@ def create_model():
     
     return model
 
+# para salvar o modelo e colocar a extensão certa
 def save_model_safe(model, output_path_no_ext: str):
-    """
-    Garante que o diretório existe e salva o modelo em formato .h5.
     
-    output_path_no_ext: caminho completo onde o modelo será salvo, **sem** extensão.
-    Exemplo: '../output/model' → salva em '../output/model.h5'
-    """
     # Adiciona extensão .h5
     save_path = output_path_no_ext + '.h5'
     # Garante que a pasta existe
@@ -57,20 +53,19 @@ def save_model_safe(model, output_path_no_ext: str):
     if carpeta and not os.path.exists(carpeta):
         os.makedirs(carpeta, exist_ok=True)
         logger.info(f"Diretório criado: {carpeta}")
+        
     # Salva o modelo
     model.save(save_path)
     logger.info(f"Modelo salvo em: {save_path}")
     
 def main():
-    # -------------------------
-    # CONFIGURAÇÕES
-    # -------------------------
-    IMG_SIZE = (224, 224)        # Tamanho de entrada do MobileNetV2
+
+    # configurAÇÃO DO modelo
+    IMG_SIZE = (224, 224)        # tamanho da imagem de entreda
     BATCH_SIZE = 32
     EPOCHS = 20                  # Pode ajustar conforme necessidade
     DATASET_PATH = "dataset"     # Pasta contendo subpastas de classes
-    MODEL_OUTPUT_PATH = "outout/model"
-    # (sem extensão – a função save_model_safe colocará '.h5')
+    MODEL_OUTPUT_PATH = "output/model" # onde o modelo será salvo
 
     THRESHOLD = 0.5
 

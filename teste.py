@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 THRESHOLD = 0.5
 
 # Caminho do modelo salvo
-MODEL_PATH = "outout\model.h5"
+MODEL_PATH = "output\model.h5"
 
 def load_model():
     """Carrega o modelo salvo."""
